@@ -16,7 +16,12 @@ import { ForgetPasswordComponent } from './forget-password/forget-password.compo
   declarations: [
     AppComponent,
     HomepageComponent,
-    LoginComponent
+    LoginComponent,
+    TagPageComponent,
+    LogoutComponent,
+    PromotionsComponent,
+    SignupComponent,
+    ForgetPasswordComponent
   ],
   imports: [
     BrowserModule,
