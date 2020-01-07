@@ -2,6 +2,7 @@ package com.customer.customer.service;
 
 import com.customer.customer.dao.CustomerDAO;
 import com.customer.customer.model.Customer;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,23 +41,31 @@ public class CustomerService {
 
     public String getCustomerName(String username){
         customerList = this.getAllCustomers();
-        Customer reqCust = customerList.stream().filter(m->m.getUsername().equals( username)).findFirst().get();
-        if(reqCust.getGender().equals("Male")){
-            return "Mr. "+ reqCust.getLastName();
-        }else{
-            return "Ms. " + reqCust.getLastName();
+        try{
+            Customer reqCust = customerList.stream().filter(m->m.getUsername().equals( username)).findFirst().get();
+            if(reqCust.getGender().equals("Male")){
+                return "Mr. "+ reqCust.getLastName();
+            }else{
+                return "Ms. " + reqCust.getLastName();
+            }
+
+        }catch(NoSuchElementException e){
+            return null;
         }
 
     }
 
     public String getRiskLevel(String username){
         customerList = this.getAllCustomers();
-        Customer reqCust = customerList.stream().filter(m->m.getUsername().equals( username)).findFirst().get();
-        return reqCust.getRiskLevel();
+        try{
+            Customer reqCust = customerList.stream().filter(m->m.getUsername().equals( username)).findFirst().get();
+            return reqCust.getRiskLevel();
+        }catch(NoSuchElementException e) {
+            return null;
+        }
     }
 
     public String getSelectedMember(String username, String password ){
-
         customerList  = this.getAllCustomers();
         try{
             Customer reqCust =  customerList.stream().filter(m->m.getUsername().equals(username)).findFirst().get();
@@ -68,7 +77,47 @@ public class CustomerService {
         }catch(NoSuchElementException e){
             return "Invalid Username/Password";
         }
+    }
 
+    public String getCustomerId(String username){
+        customerList = this.getAllCustomers();
+        try{
+            Customer reqCust = customerList.stream().filter(m->m.getUsername().equals( username)).findFirst().get();
+            return reqCust.getCustomerId();
+        }catch(NoSuchElementException e ){
+            return null;
+        }
+
+    }
+
+    public int getAccountId(String username){
+        int finalResult = 0;
+        String customerId = this.getCustomerId(username);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.add("Identity","T49");
+        headers.add("Token", "bad9e5d0-1800-4c8e-9286-b96453f75809");
+        HttpEntity<String> entity  = new HttpEntity<String>(headers);
+        String hyperlink = "http://techtrek-api-gateway.ap-southeast-1.elasticbeanstalk.com/accounts/deposit/"+customerId;
+        String result =restTemplate.exchange(hyperlink, HttpMethod.GET,entity,String.class).getBody();
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, String> map = new HashMap<String, String>();
+
+        try{
+            //map = mapper.readValue(result, new TypeReference<Map<String, String>>(){});
+            List<HashMap> dataAsMap = mapper.readValue(result, List.class);
+            finalResult = Integer.parseInt(dataAsMap.get(0).get("accountId").toString());
+            if(dataAsMap.isEmpty()){
+                return finalResult;
+            }
+               //finalResult= map.get("accountId").toString();
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return finalResult;
     }
 
 

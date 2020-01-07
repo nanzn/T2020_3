@@ -42,25 +42,32 @@ public class CustomerDetailAPI {
         return customerService.getRiskLevel(username);
     }
 
+    @GetMapping(value="/customers/getCustomerId/{username}")
+    public String getCustomerId(@PathVariable("username") String username){
+        System.out.println("hi");
+        return customerService.getCustomerId(username);
+    }
+
+    @GetMapping(value="/customers/getAccountId/{username}")
+    public int getAccountId(@PathVariable("username") String username){
+        return customerService.getAccountId(username);
+    }
+
     @PostMapping(value = "/customers/login")
     public String getMember(@RequestBody String json ){
         ObjectMapper mapper = new ObjectMapper();
         HashMap<String, Object> map = new HashMap<String, Object>();
         String result = "";
-
         try{
             map = mapper.readValue(json, new TypeReference<Map<String, Object>>(){});
             result = customerService.getSelectedMember(map.get("username").toString(), map.get("password").toString());
-
-
-
         }  catch (JsonMappingException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return result;
     }
+
 
 }
