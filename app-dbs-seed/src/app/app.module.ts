@@ -15,10 +15,14 @@ import { LoginComponent } from './login/login.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
-    // RouterModule.forRoot([
-    //   { path: '', component: },
-    // ])
+    AppRoutingModule,
+    RouterModule.forRoot([
+      { path: '', component: LoginComponent},
+      { path: '/homepage', component: HomepageComponent },
+      // Tag page
+      // Logout page
+      // Promotion page
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent]
