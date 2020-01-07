@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-homepage',
-  templateUrl: './homepage.component.html',
-  styleUrls: ['./homepage.component.css']
+  selector: 'app-promotions',
+  templateUrl: './promotions.component.html',
+  styleUrls: ['./promotions.component.css']
 })
-export class HomepageComponent implements OnInit {
+export class PromotionsComponent implements OnInit {
 // Define variable here
 
   constructor(
