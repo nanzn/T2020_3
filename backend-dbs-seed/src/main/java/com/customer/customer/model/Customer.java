@@ -29,6 +29,9 @@ public class Customer {
     private String username;
     private String password;
 
+    public Customer(){
+
+    }
     public Customer(String customerId, String gender, String firstName, String lastName, Timestamp lastlogIn, Timestamp dateOfBirth, String riskLevel) {
         this.customerId = customerId;
         this.gender = gender;
