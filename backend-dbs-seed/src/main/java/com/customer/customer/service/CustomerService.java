@@ -120,6 +120,127 @@ public class CustomerService {
         return finalResult;
     }
 
+    public String getAccountDetails(String username){
+        String finalResult = "";
+        int accountId = this.getAccountId(username);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.add("Identity","T49");
+        headers.add("Token", "bad9e5d0-1800-4c8e-9286-b96453f75809");
+        HttpEntity<String> entity  = new HttpEntity<String>(headers);
+        String hyperlink = "http://techtrek-api-gateway.ap-southeast-1.elasticbeanstalk.com/accounts/deposit/"+accountId+"/balance?month=1&year=2018";
+        String result =restTemplate.exchange(hyperlink, HttpMethod.GET,entity,String.class).getBody();
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<String, String> map = new HashMap<String, String>();
+
+        try{
+            map = mapper.readValue(result, new TypeReference<Map<String, String>>(){});
+            if(map.isEmpty()){
+                return finalResult;
+            }
+            finalResult = mapper.writeValueAsString(map);
+            //List<HashMap> dataAsMap = mapper.readValue(result, List.class);
+            //finalResult = mapper.writeValueAsString(dataAsMap.get(0));
+//            if(dataAsMap.isEmpty()){
+//                return finalResult;
+//            }
+            //finalResult= map.get("accountId").toString();
+
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return finalResult;
+    }
+
+    public String collectTransct(String username){
+        String finalResult = "";
+        int accountId  = this.getAccountId(username);
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.add("Identity","T49");
+        headers.add("Token", "bad9e5d0-1800-4c8e-9286-b96453f75809");
+        HttpEntity<String> entity  = new HttpEntity<String>(headers);
+        //String accountNo = Integer.toString(accountId);
+        String hyperlink = "http://techtrek-api-gateway.ap-southeast-1.elasticbeanstalk.com/transactions/"+accountId+"?from=01-" +
+                "01-2018&to=01-30-2020";
+        String result =restTemplate.exchange(hyperlink, HttpMethod.GET,entity,String.class).getBody();
+        ObjectMapper mapper = new ObjectMapper();
+        //ArrayList<a> map = new HashMap<String, Object>();
+        HashMap<String,Integer> answerMap = new HashMap<String,Integer>();
+        try{
+            List<Map<String,Object>> transct = mapper.readValue(result, new TypeReference<ArrayList<Map<String, Object>>>(){});
+            for (int i=0; i<transct.size(); i++){
+                Map<String,Object> map = new HashMap<String,Object>() ;
+                map = transct.get(i);
+                for (Map.Entry<String, Object> entry : map.entrySet()){
+                    if (entry.getKey().equals("tag")) {
+                        String word =entry.getValue().toString();
+                        if (answerMap.containsKey(entry.getValue())) {
+                            int count = answerMap.get(entry.getValue());
+                            answerMap.put(word, count + 1);
+                        }
+                        else {answerMap.put(word,1);
+                        }
+                    }
+                }
+            }
+            finalResult = mapper.writeValueAsString(answerMap);
+
+        }catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return finalResult;
+    }
+
+//    public String collectTransctAmt(String username){
+//        String finalResult = "";
+//        int accountId  = this.getAccountId(username);
+//        RestTemplate restTemplate = new RestTemplate();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+//        headers.add("Identity","T49");
+//        headers.add("Token", "bad9e5d0-1800-4c8e-9286-b96453f75809");
+//        HttpEntity<String> entity  = new HttpEntity<String>(headers);
+//        //String accountNo = Integer.toString(accountId);
+//        String hyperlink = "http://techtrek-api-gateway.ap-southeast1.elasticbeanstalk.com/transactions/"+accountId+"?from=01-" +
+//                "01-2018&to=01-30-2020";
+//        String result =restTemplate.exchange(hyperlink, HttpMethod.GET,entity,String.class).getBody();
+//        System.out.println(result);
+//        ObjectMapper mapper = new ObjectMapper();
+//        //ArrayList<a> map = new HashMap<String, Object>();
+//        HashMap<String,Double> answerMap = new HashMap<String,Double>();
+//        try{
+//            List<Map<String,Object>> transct = mapper.readValue(result, new TypeReference<ArrayList<Map<String, Object>>>(){});
+//            for (int i=0; i<transct.size(); i++){
+//                Map<String,Object> map = new HashMap<String,Object>() ;
+//                map = transct.get(i);
+//                for (Map.Entry<String, Object> entry : map.entrySet()){
+//                    if (entry.getKey().equals("tag")) {
+//                        String word =entry.getValue().toString();
+//                        if (answerMap.containsKey(entry.getValue())) {
+//                            Double amount = answerMap.get(entry.getValue());
+//                            answerMap.put(word, amount + (Double)entry.getValue());
+//                        }
+//                        else {answerMap.put(word,(Double)entry.getValue());
+//                        }
+//                    }
+//                }
+//            }
+//            finalResult = mapper.writeValueAsString(answerMap);
+//
+//        }catch (JsonMappingException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return finalResult;
+//    }
+
 
 //    public String saveCustomer(int customerId){
 //        String finalResult = "";

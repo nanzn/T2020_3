@@ -53,6 +53,22 @@ public class CustomerDetailAPI {
         return customerService.getAccountId(username);
     }
 
+    @GetMapping(value="/customers/getAccountDetail/{username}")
+    public String getAccountDetail(@PathVariable("username") String username){
+        return customerService.getAccountDetails(username);
+    }
+
+    @GetMapping(value="/customers/getTrans/{username}")
+    public String getTransaction(@PathVariable("username") String username){
+         return customerService.collectTransct(username);
+    }
+
+//    @GetMapping(value="/customers/getTransAmt/{username}")
+//    public String getTransactionAmt(@PathVariable("username") String username){
+//        return customerService.collectTransctAmt(username);
+//    }
+
+
     @PostMapping(value = "/customers/login")
     public String getMember(@RequestBody String json ){
         ObjectMapper mapper = new ObjectMapper();
