@@ -1,4 +1,7 @@
 package com.customer.customer.dao;
 
-public interface CustomerDAO {
+import com.customer.customer.model.Customer;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CustomerDAO extends JpaRepository<Customer, Integer> {
 }
