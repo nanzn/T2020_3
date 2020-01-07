@@ -1,15 +1,17 @@
 <p> Hello </p>
-<form class = 'login'>
-  Username: <input type="text" name="username">
-  <br>
-  Password: <input type="text" name="password">
-  <br>
-  <input type="submit" value="Login"  [routerLink]="'/homepage'">
+{{result}}
+<br />
+Username: <input type="text" name="username" #username>
+<br>
+Password: <input type="text" name="password" #password>
+<br>
+<button mat-button (click)="login(username.value, password.value)" color="primary">Login
+</button>
 
 <br>
 
-<form class = 'login' [routerLink]="'/forgetpassword'">
-<input type="submit" value="Forgot password">
+<form class='login' [routerLink]="'/forgetpassword'">
+  <input type="submit" value="Forgot password">
 
-<form class = 'login' [routerLink]="'/signup'">
-  <input type="submit" value="Sign up as a new user">
+  <form class='login' [routerLink]="'/signup'">
+    <input type="submit" value="Sign up as a new user">

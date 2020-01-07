@@ -44,7 +44,7 @@ public class CustomerDetailAPI {
 
     @GetMapping(value="/customers/getCustomerId/{username}")
     public String getCustomerId(@PathVariable("username") String username){
-        System.out.println("hi");
+
         return customerService.getCustomerId(username);
     }
 
